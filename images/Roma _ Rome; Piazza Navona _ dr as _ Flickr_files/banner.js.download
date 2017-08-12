@@ -1,0 +1,79 @@
+var bannerboy = bannerboy || {};
+bannerboy.main = function() {
+
+	var width = 300;
+	var height = 250;
+	var banner = bannerboy.createElement({width: width, height: height, backgroundColor: "#111111", border: "solid 1px #696969", boxSizing: "border-box", overflow: "hidden", cursor: "pointer", parent: document.getElementById("banner")});
+	var main_tl;
+
+	var images = [
+		"bg_paint.png", 
+		"txt_1_1.png",  
+		"cta_txt.png", 
+		"logo_squarespace.png",
+	];
+
+	bannerboy.preloadImages(images, function() {
+
+		/* Create elements
+		================================================= */
+
+		var bg_paint = bannerboy.createElement({backgroundImage: "bg_paint.png", retina: true, parent: banner});		
+		var txt_1 = bannerboy.createElement({left: 23, top: 68, width: 254, height: 84, parent: banner});
+			var txt_1_1 = bannerboy.createElement({backgroundImage: "txt_1_1.png", retina: true, parent: txt_1});
+		var cta = bannerboy.createElement({left: 26, top: 181, width: 163, height: 44, parent: banner});
+			var cta_base = bannerboy.createElement({backgroundColor: "#ffffff", width: 163, height: 44, parent: cta});
+			var cta_txt = bannerboy.createElement({backgroundImage: "cta_txt.png", left: 20, top: 19, retina: true, parent: cta});
+		var logo_squarespace = bannerboy.createElement({backgroundImage: "logo_squarespace.png", left: 20, top: 30, retina: true, parent: banner});
+
+		/* Adjust elements
+		================================================= */
+		bg_paint.set({top: -85, left: -40});
+	
+		/* Initiate
+		================================================= */
+
+		/* Animations
+		================================================= */
+
+		bg_paint.tl_in = new BBTimeline()
+		.fromTo(bg_paint, 15.0, {scale: 0.8, ease: Linear.easeNone}, {rotation: 20, scale: 1.8, ease: Linear.easeNone} )
+
+
+		/* Timeline
+		================================================= */
+		main_tl = new BBTimeline()
+		
+		.offset(.25)
+		.add(bg_paint.tl_in)
+	
+		scrubber(main_tl)
+
+
+		/* Interactions
+		================================================= */
+
+		cta.addEventListener("mouseenter", function() {
+			cta_base.to(0.1, {opacity: 0.65});
+		});
+
+		cta.addEventListener("mouseleave", function() {
+			cta_base.to(0.1, {opacity: 1});
+		});
+
+
+
+		/* Helpers
+		================================================= */
+
+		/* Scrubber
+		================================================= */
+		function scrubber(tl) {
+			if (window.location.origin == "file://") {
+				bannerboy.include(["../bannerboy_scrubber.min.js"], function() {
+					if (bannerboy.scrubberController) bannerboy.scrubberController.create({"main timeline": tl});
+				});
+			}
+		}
+	});
+};
